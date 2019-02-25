@@ -10,7 +10,14 @@ import javax.servlet.http.HttpSession;
 
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
-    //在请求处理之前调用,只有返回true才会执行请求
+    /**
+     * 在请求处理之前调用,只有返回true才会执行请求
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param o
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         //得到session
@@ -27,13 +34,27 @@ public class AdminInterceptor implements HandlerInterceptor {
         }
     }
 
-    //试图渲染之后执行
+    /**
+     * 试图渲染之后执行
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param o
+     * @param modelAndView
+     * @throws Exception
+     */
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
 
     }
 
-    //在请求处理之后,视图渲染之前执行
+    /**
+     * 在请求处理之后,视图渲染之前执行
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param o
+     * @param e
+     * @throws Exception
+     */
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
 

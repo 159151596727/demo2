@@ -29,6 +29,7 @@ public class WsController {
         //webSocketService.sendMsg(new WiselyMessage("（群发）客户端返回浏览器的信息：" + message.getName() + "!"));
         List<String> users = new ArrayList<>();
         users.add(message.getId());
+        users.add(message.getOwnId());
         webSocketService.sendUsers(users,new WiselyMessage(message.getName() + "：" + message.getMsg()));
     }
 }

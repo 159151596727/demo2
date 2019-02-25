@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Administrator
-  Date: 2019/2/22
-  Time: 16:51
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
@@ -32,10 +25,10 @@
 <script src="js/stomp.min.js"></script>
 <script src="localjs/jquery-3.3.1.js"></script>
 <script th:inline="javascript">
-    var stompClient = null;
+    let stompClient = null;
     //此值有服务端传递给前端,实现方式没有要求
-    var userId = ${loginUser.id};
-    var userName = "${loginUser.userName}";
+    let userId = ${loginUser.id};
+    let userName = "${loginUser.userName}";
 
     function setConnected(connected) {
         document.getElementById('connect').disabled = connected;
@@ -45,16 +38,16 @@
     }
 
     function connect() {
-        var socket = new SockJS('/endpointWisely'); //1连接SockJS的endpoint是“endpointWisely”，与后台代码中注册的endpoint要一样。
+        let socket = new SockJS('/endpointWisely'); //1连接SockJS的endpoint是“endpointWisely”，与后台代码中注册的endpoint要一样。
         stompClient = Stomp.over(socket);//2创建STOMP协议的webSocket客户端。
         stompClient.connect({}, function(frame) {//3连接webSocket的服务端。
             setConnected(true);
             console.log('开始进行连接Connected: ' + frame);
-            //4通过stompClient.subscribe（）订阅服务器的目标是'/topic/getResponse'发送过来的地址，与@SendTo中的地址对应。
+            //订阅全部推送的服务目标
             stompClient.subscribe('/topic/getResponse', function(respnose){
                 showResponse("/topic/getResponse" + JSON.parse(respnose.body).msg);
             });
-            //4通过stompClient.subscribe（）订阅服务器的目标是'/user/' + userId + '/msg'接收一对一的推送消息,其中userId由服务端传递过来,用于表示唯一的用户,通过此值将消息精确推送给一个用户
+            //订阅个人推送的服务目标
             stompClient.subscribe('/user/' + userId + '/msg', function(respnose){
                 console.log(respnose);
                 showResponse1(JSON.parse(respnose.body).msg);
@@ -72,18 +65,18 @@
     }
 
     function sendName() {
-        var msg = $('#msg').val();
-        var id = $('#id').val();
+        let msg = $('#msg').val();
+        let id = $('#id').val();
         //通过stompClient.send（）向地址为"/welcome"的服务器地址发起请求，与@MessageMapping里的地址对应。因为我们配置了registry.setApplicationDestinationPrefixes(Constant.WEBSOCKETPATHPERFIX);所以需要增加前缀/ws-push/
-        stompClient.send("/ws-push/welcome", {}, JSON.stringify({ 'name': userName,'id':id,'msg':msg }));
+        stompClient.send("/ws-push/welcome", {}, JSON.stringify({ 'name': userName,'ownId':userId,'id':id,'msg':msg }));
     }
 
     function showResponse(message) {
-        var response = $("#response");
+        let response = $("#response");
         response.html(response.html()+message+ '<br/>');
     }
     function showResponse1(message) {
-        var response = $("#response1");
+        let response = $("#response1");
         response.html(response.html()+message+ '<br/>');
     }
 </script>

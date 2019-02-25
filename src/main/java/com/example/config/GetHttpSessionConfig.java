@@ -7,7 +7,7 @@ import javax.websocket.server.ServerEndpointConfig;
 import javax.websocket.server.ServerEndpointConfig.Configurator;
 
 /**
- * websocke onopen时获取httpsession
+ * websocket onopen时获取httpsession
  */
 public class GetHttpSessionConfig extends Configurator  {
     @Override

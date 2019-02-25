@@ -8,6 +8,7 @@ package com.example.util;
 
 public class WiselyMessage {
     private String name;
+    private String ownId;
     private String id;
     private String msg;
 
@@ -19,18 +20,20 @@ public class WiselyMessage {
         this.msg = msg;
     }
 
-    public WiselyMessage(String name, String id, String msg) {
-        this.name = name;
-        this.id = id;
-        this.msg = msg;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOwnId() {
+        return ownId;
+    }
+
+    public void setOwnId(String ownId) {
+        this.ownId = ownId;
     }
 
     public String getId() {
