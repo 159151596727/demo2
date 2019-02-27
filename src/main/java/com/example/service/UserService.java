@@ -18,6 +18,7 @@ public class UserService implements  UserMapper{
      * @param password
      * @return
      */
+    @Override
     public Auuser userLogin(String loginCode, String password){
         return userMapper.userLogin(loginCode,password);
     }
@@ -27,6 +28,7 @@ public class UserService implements  UserMapper{
      * @param name
      * @return
      */
+    @Override
     public int validataName(String name){
         return  userMapper.validataName(name);
     }
@@ -36,6 +38,7 @@ public class UserService implements  UserMapper{
      * @param mobile
      * @return
      */
+    @Override
     public int validataMobile(String mobile){
         return  userMapper.validataMobile(mobile);
     }
@@ -45,6 +48,7 @@ public class UserService implements  UserMapper{
      * @param auuser
      * @return
      */
+    @Override
     public int insertUser(Auuser auuser){
         return userMapper.insertUser(auuser);
     }
@@ -54,10 +58,17 @@ public class UserService implements  UserMapper{
      * @param loginCode
      * @return
      */
+    @Override
     public int modifyLastLogin(String loginCode){
         return  userMapper.modifyLastLogin(loginCode);
     }
 
+    /**
+     * 获取所有好友（目前是获取除自己之外的所有用户）
+     * @param id 用户id 主键
+     * @return
+     */
+    @Override
     public List<Auuser> getAuusers(Integer id){
         return  userMapper.getAuusers(id);
     }

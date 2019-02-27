@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.entity.Auuser;
 import com.example.service.UserService;
 import com.example.util.DataMaps;
+import com.example.util.ThreadPoolUtil;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,25 +17,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 //@RestController//@RestController注解能够使项目支持Rest
 @Controller
-//@RequestMapping(value = "/user")
 public class UserConstoller {
-    final String KAPTCHA_CODE = "code";//图片验证码
-    final String MOBILE_CODE = "mobileCode";//短信验证码
+    /**
+     * 图片验证码
+     */
+    final String KAPTCHA_CODE = "code";
+    /**
+     * 短信验证码
+     */
+    final String MOBILE_CODE = "mobileCode";
     @Autowired
-    UserService userService;//注入用户服务
+    UserService userService;
+    /**
+     * 注入验证码服务
+     */
     @Autowired
-    DefaultKaptcha defaultKaptcha;//注入验证码服务
+    DefaultKaptcha defaultKaptcha;
 
-    @RequestMapping("/{view}.html")//method = RequestMethod.GET
-    public String view(String view) {
+    @RequestMapping("/{view}.html")
+    public String view(@PathVariable String view) {
         return view;
     }
 
     @RequestMapping("/{view}")
-    public String getView(String view) {
+    public String getView(@PathVariable String view) {
         return view;
     }
 
@@ -71,19 +81,22 @@ public class UserConstoller {
     private String userLogin(HttpServletRequest request, String loginCode, String password, String tryCode) {
         String storeCode = (String) request.getSession().getAttribute(KAPTCHA_CODE);
         Auuser user = userService.userLogin(loginCode, password);
-        if (!storeCode.toUpperCase().equals(tryCode.toUpperCase())) {//全大写匹配
+        if (!storeCode.toUpperCase().equals(tryCode.toUpperCase())) {
             return JSON.toJSONString("code");
         } else if (user == null) {
             return JSON.toJSONString("no");
         }
-        new Thread(new Runnable() {
+        //创建线程池
+        ThreadPoolExecutor executor = ThreadPoolUtil.getInstance().addThread();
+        executor.execute(new Runnable() {
             @Override
             public void run() {
                 if (userService.modifyLastLogin(user.getLoginCode()) > 0){
                     System.out.println("ok");
                 }
             }
-        }).start();
+        });
+        executor.shutdown();//结束所有已提交的任务
         //保存登录用户到session
         request.getSession().setAttribute(DataMaps.LOGIN_USER, user);
         return JSON.toJSONString("ok");

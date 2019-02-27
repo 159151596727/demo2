@@ -67,6 +67,9 @@
     function sendName() {
         let msg = $('#msg').val();
         let id = $('#id').val();
+        if(msg == null){
+            return;
+        }
         //通过stompClient.send（）向地址为"/welcome"的服务器地址发起请求，与@MessageMapping里的地址对应。因为我们配置了registry.setApplicationDestinationPrefixes(Constant.WEBSOCKETPATHPERFIX);所以需要增加前缀/ws-push/
         stompClient.send("/ws-push/welcome", {}, JSON.stringify({ 'name': userName,'ownId':userId,'id':id,'msg':msg }));
     }

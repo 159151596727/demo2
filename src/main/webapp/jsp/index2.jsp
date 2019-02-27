@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/reset.min.css">
     <link rel="stylesheet" href="css/indexStyle.css">
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
 
 </head>
 <body onload="connect();">
@@ -26,6 +27,8 @@
                     <span class="name">${user.userName }</span>
                     <span class="time">1:44 PM</span>
                     <span class="preview">显示最后一句聊天记录</span>
+                    <span id="icon${user.id }" class="layui-badge-dot"></span>
+                    <%--做到上面，明天做收到消息出现这个图标，以及查看消息后清除这个图标--%>
                     <input class="id" value="${user.id }" type="hidden"/>
                 </li>
                 </c:forEach>
@@ -34,7 +37,7 @@
         <div class="right">
             <div class="top"><span>To: <span class="name" id="showName"></span></span></div>
             <c:forEach items="${auusers }" var="user">
-            <div class="chat" id = "${user.id}" data-chat="person${user.id }">
+            <div class="chat" id = "message${user.id}" data-chat="person${user.id }">
                 <div class="conversation-start">
                     <span>Today, 5:38 PM</span>
                 </div>
@@ -54,6 +57,7 @@
 </div>
 
 <script src="localjs/jquery-3.3.1.js"></script>
+<script src="layui/layui.js" charset="utf-8"></script>
 <script src="js/indexStyle.js"></script>
 <script src="js/sockjs.min.js"></script>
 <script src="js/stomp.min.js"></script>
@@ -66,7 +70,7 @@
     //点击切换接收信息人的id
     $("ul.people").on("click","li",function(){
         id = $(this).find("input.id").val();
-        //alert($("div.chat").attr("data-chat","person"+id).html());
+        $("span#icon"+id).attr("class","");//清除消息通知的小图标
     });
     //初始化添加发送人
     $("#showName").text($("ul.people").find("span.name:first").text());
@@ -95,12 +99,12 @@
     function sendMsg() {
         let msg = $("#msg").val();
         stompClient.send("/ws-push/welcome", {}, JSON.stringify({ 'name': userName,'ownId':userId,'id':id,'msg':msg }));
-        $("#"+id).append("<div class=\"bubble me\">" +  $("#msg").val()+"</div>")
+        $("#message"+id).append("<div class=\"bubble me\">" +  $("#msg").val()+"</div>")
         $("#msg").val("");
     }
     //接收返回发送人的id以及信息并输入到聊天框
     function showResponse(ownId,message) {
-        $("#"+ownId).append("<div class=\"bubble you\">" +  message+"</div>")
+        $("#message"+ownId).append("<div class=\"bubble you\">" +  message+"</div>")
     }
 </script>
 
