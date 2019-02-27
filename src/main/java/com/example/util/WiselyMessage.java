@@ -7,16 +7,20 @@ package com.example.util;
 
 
 public class WiselyMessage {
-    private String name;
-    private String ownId;
-    private String id;
-    private String msg;
+    private String name;//发送人的用户名
+    private String ownId;//发送人的id
+    private String id;//接收人的id
+    private String msg;//返回或者发送的信息
 
     public WiselyMessage() {
 
     }
 
     public WiselyMessage(String msg) {
+        this.msg = msg;
+    }
+    public WiselyMessage(String ownId,String msg) {
+        this.ownId = ownId;
         this.msg = msg;
     }
 

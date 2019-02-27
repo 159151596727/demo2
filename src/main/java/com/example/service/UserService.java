@@ -5,8 +5,10 @@ import com.example.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class UserService {
+public class UserService implements  UserMapper{
 
     @Autowired
     private UserMapper userMapper;
@@ -25,8 +27,8 @@ public class UserService {
      * @param name
      * @return
      */
-    public boolean validataName(String name){
-        return  userMapper.validataName(name) > 0;
+    public int validataName(String name){
+        return  userMapper.validataName(name);
     }
 
     /**
@@ -34,8 +36,8 @@ public class UserService {
      * @param mobile
      * @return
      */
-    public boolean validataMobile(String mobile){
-        return  userMapper.validataMobile(mobile) > 0;
+    public int validataMobile(String mobile){
+        return  userMapper.validataMobile(mobile);
     }
 
     /**
@@ -43,8 +45,8 @@ public class UserService {
      * @param auuser
      * @return
      */
-    public boolean insertUser(Auuser auuser){
-        return userMapper.insertUser(auuser) > 0;
+    public int insertUser(Auuser auuser){
+        return userMapper.insertUser(auuser);
     }
 
     /**
@@ -52,7 +54,11 @@ public class UserService {
      * @param loginCode
      * @return
      */
-    public boolean modifyLastLogin(String loginCode){
-        return  userMapper.modifyLastLogin(loginCode) > 0;
+    public int modifyLastLogin(String loginCode){
+        return  userMapper.modifyLastLogin(loginCode);
+    }
+
+    public List<Auuser> getAuusers(Integer id){
+        return  userMapper.getAuusers(id);
     }
 }

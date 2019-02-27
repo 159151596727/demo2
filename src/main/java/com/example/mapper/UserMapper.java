@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface UserMapper {
     @Select("SELECT * FROM auuser where loginCode=#{loginCode} and password=#{password}")
@@ -18,4 +20,6 @@ public interface UserMapper {
     int insertUser(Auuser auuser);
     @Update("UPDATE auuser SET lastLogin =NOW() WHERE loginCode = #{loginCode}")
     int modifyLastLogin(String loginCode);
+    @Select("SELECT * FROM auuser where id != #{id}")
+    List<Auuser> getAuusers(Integer id);
 }

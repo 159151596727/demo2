@@ -7,6 +7,7 @@ import com.example.util.DataMaps;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 //@RestController//@RestController注解能够使项目支持Rest
 @Controller
@@ -77,7 +79,7 @@ public class UserConstoller {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (userService.modifyLastLogin(user.getLoginCode())){
+                if (userService.modifyLastLogin(user.getLoginCode()) > 0){
                     System.out.println("ok");
                 }
             }
@@ -109,7 +111,7 @@ public class UserConstoller {
     @RequestMapping("/validataName.do")
     @ResponseBody
     private String validataName(String name) {
-        if (userService.validataName(name)){
+        if (userService.validataName(name) == 0){
             return JSON.toJSONString("no");
         }
         return JSON.toJSONString("ok");
@@ -119,7 +121,7 @@ public class UserConstoller {
     @RequestMapping("/validataMobile.do")
     @ResponseBody
     private String validataMobile(String mobile) {
-        if (userService.validataMobile(mobile)){
+        if (userService.validataMobile(mobile) == 0){
             return JSON.toJSONString("no");
         }
         return JSON.toJSONString("ok");
@@ -140,12 +142,20 @@ public class UserConstoller {
         String code = (String) request.getSession().getAttribute(MOBILE_CODE);
         if (!auuser.getCode().equals(code)){
             return JSON.toJSONString("code");
-        }else if (!userService.insertUser(auuser)){
+        }else if (userService.insertUser(auuser) == 0){
             return JSON.toJSONString("no");
         }
         auuser.setUserName(auuser.getLoginCode());//默认件登录名赋给显示名
         request.getSession().setAttribute(DataMaps.LOGIN_USER, auuser);
         return JSON.toJSONString("ok");
+    }
+
+    @RequestMapping("/index2.html")
+    public String requestIndex2(Model model,HttpServletRequest request) {
+        Auuser user = (Auuser) request.getSession().getAttribute(DataMaps.LOGIN_USER);
+        List<Auuser> auusers = userService.getAuusers(user.getId());
+        model.addAttribute("auusers", auusers);
+        return "index2";
     }
 
 }
