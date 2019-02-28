@@ -2,9 +2,11 @@ package com.example.constoller;
 
 import com.alibaba.fastjson.JSON;
 import com.example.entity.Auuser;
+import com.example.entity.Chatrecord;
+import com.example.service.ChatrecordService;
 import com.example.service.UserService;
 import com.example.util.DataMaps;
-import com.example.util.ThreadPoolUtil;
+import com.example.threadUtil.CustomThreadPoolExecutor;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,9 @@ public class UserConstoller {
     final String MOBILE_CODE = "mobileCode";
     @Autowired
     UserService userService;
+
+    @Autowired
+    ChatrecordService chatrecordService;
     /**
      * 注入验证码服务
      */
@@ -87,7 +92,7 @@ public class UserConstoller {
             return JSON.toJSONString("no");
         }
         //创建线程池
-        ThreadPoolExecutor executor = ThreadPoolUtil.getInstance().addThread();
+        ThreadPoolExecutor executor = CustomThreadPoolExecutor.getCustomThreadPoolExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -96,7 +101,6 @@ public class UserConstoller {
                 }
             }
         });
-        executor.shutdown();//结束所有已提交的任务
         //保存登录用户到session
         request.getSession().setAttribute(DataMaps.LOGIN_USER, user);
         return JSON.toJSONString("ok");
@@ -167,7 +171,9 @@ public class UserConstoller {
     public String requestIndex2(Model model,HttpServletRequest request) {
         Auuser user = (Auuser) request.getSession().getAttribute(DataMaps.LOGIN_USER);
         List<Auuser> auusers = userService.getAuusers(user.getId());
+        List<Chatrecord> chatrecords =  chatrecordService.getChatrecoresById(user.getId());
         model.addAttribute("auusers", auusers);
+        model.addAttribute("chatrecords", chatrecords);
         return "index2";
     }
 

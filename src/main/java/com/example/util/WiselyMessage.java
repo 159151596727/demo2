@@ -23,6 +23,11 @@ public class WiselyMessage {
         this.ownId = ownId;
         this.msg = msg;
     }
+    public WiselyMessage(String ownId,String id,String msg) {
+        this.ownId = ownId;
+        this.id = id;
+        this.msg = msg;
+    }
 
     public String getName() {
         return name;

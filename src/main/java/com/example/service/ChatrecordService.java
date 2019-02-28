@@ -5,6 +5,8 @@ import com.example.mapper.ChatrecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by 李印锋 on 2/27/0027 17:11
  */
@@ -16,5 +18,10 @@ public class ChatrecordService implements ChatrecordMapper {
     @Override
     public int insertMessage(Chatrecord Chatrecord) {
         return chatrecordMapper.insertMessage(Chatrecord);
+    }
+
+    @Override
+    public List<Chatrecord> getChatrecoresById(Integer id) {
+        return chatrecordMapper.getChatrecoresById(id);
     }
 }
