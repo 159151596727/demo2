@@ -26,6 +26,16 @@ public class WebSocketService {
         template.convertAndSend(Constant.PRODUCERPATH, msg);
     }
 
+
+    /**
+     * 发给订阅了相关频道的在线用户
+     *
+     * @param msg
+     */
+    public void sendMsg(String sendTo,WiselyMessage msg) {
+        template.convertAndSend(sendTo, msg);
+    }
+
     /**
      * 发送给指定用户
      * @param users
